@@ -1,0 +1,46 @@
+{
+  "name": "pizza-shop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "start": "yarn build && node dist/main.js",
+    "lint": "eslint '**/*.ts' --fix && prettier --write '**/*.ts'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/godcrampy/pizza-shop.git"
+  },
+  "author": {
+    "name": "Sahil Bondre",
+    "email": "sahilbondre@gmail.com",
+    "url": "https://sahil.surge.sh"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/godcrampy/pizza-shop/issues"
+  },
+  "homepage": "https://github.com/godcrampy/pizza-shop#readme",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.ts": [
+      "yarn lint"
+    ]
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.33.0",
+    "@typescript-eslint/parser": "^2.33.0",
+    "eslint": "^7.0.0",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.2",
+    "prettier": "^2.0.5"
+  },
+  "dependencies": {
+    "typescript": "^3.9.2"
+  }
+}
