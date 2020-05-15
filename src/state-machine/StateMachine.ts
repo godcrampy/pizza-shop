@@ -20,6 +20,8 @@ class StateMachine {
           if (state === State.Employee) console.log("Employee");
           break;
 
+        case State.Employee:
+          break;
         default:
           state = State.Initialize;
           break;

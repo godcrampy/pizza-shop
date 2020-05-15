@@ -1,7 +1,14 @@
-import StateMachine from "./state-machine/StateMachine";
+// import StateMachine from "./state-machine/StateMachine";
+
+import QueryEngine from "./query-engine/QueryEngine";
 
 (async () => {
-  let machine = new StateMachine();
+  let q = new QueryEngine();
+  console.log("Starting");
+  await q.start();
+  console.log("Getting Roles");
+  let res = await q.doesCustomerExists(9876543210);
+  console.log(res);
 
-  machine.run();
+  await q.stop();
 })();

@@ -36,6 +36,8 @@
   "devDependencies": {
     "@types/inquirer": "^6.5.0",
     "@types/jest": "^25.2.2",
+    "@types/mysql": "^2.15.10",
+    "@types/mysql2": "types/mysql2",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
     "eslint": "^7.0.0",
@@ -49,6 +51,8 @@
     "chalk": "^4.0.0",
     "inquirer": "^7.1.0",
     "mock-stdin": "^1.0.0",
+    "mysql": "^2.18.1",
+    "mysql2": "^2.1.0",
     "typescript": "^3.9.2"
   }
 }

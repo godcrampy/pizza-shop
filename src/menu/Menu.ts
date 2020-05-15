@@ -36,6 +36,10 @@ class Menu {
       }
     }
   }
+
+  // async promptUserDetails(): Promise<{ state: State, customer: Customer }> {
+
+  // }
 }
 
 export default Menu;
