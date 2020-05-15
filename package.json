@@ -6,7 +6,8 @@
   "scripts": {
     "build": "rm -rf dist && tsc",
     "start": "yarn build && node dist/main.js",
-    "lint": "eslint '**/*.ts' --fix && prettier --write '**/*.ts'"
+    "lint": "eslint '**/*.ts' --fix && prettier --write '**/*.ts'",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -33,12 +34,15 @@
     ]
   },
   "devDependencies": {
+    "@types/jest": "^25.2.2",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
     "eslint": "^7.0.0",
     "husky": "^4.2.5",
+    "jest": "^25.5.2",
     "lint-staged": "^10.2.2",
-    "prettier": "^2.0.5"
+    "prettier": "^2.0.5",
+    "ts-jest": "^25.5.1"
   },
   "dependencies": {
     "typescript": "^3.9.2"
