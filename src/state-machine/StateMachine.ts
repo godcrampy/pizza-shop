@@ -2,8 +2,20 @@ import State from "./states";
 import Menu from "../menu/Menu";
 
 class StateMachine {
+  static getPreviousState(state: State): State {
+    switch (state) {
+      case State.Employee:
+        return State.Initialize;
+      case State.Admin:
+        return State.Initialize;
+      default:
+        return State.Initialize;
+    }
+  }
+
   private state: State;
   private menu: Menu;
+  private customer: Customer | undefined;
   constructor() {
     this.state = State.Initialize;
     this.menu = new Menu();
@@ -11,20 +23,22 @@ class StateMachine {
 
   async run() {
     let state: State = State.Initialize;
+    await this.menu.initilize();
     // eslint-disable-next-line no-constant-condition
     while (true) {
-      switch (this.state) {
-        case State.Initialize:
-          state = await this.menu.promptAdminOrEmployee();
-          if (state === State.Admin) console.log("Admin");
-          if (state === State.Employee) console.log("Employee");
-          break;
-
-        case State.Employee:
-          break;
-        default:
-          state = State.Initialize;
-          break;
+      if (this.state === State.Initialize) {
+        // * Initial State: Choose Admin or Employee
+        state = await this.menu.promptAdminOrEmployee();
+      } else if (this.state === State.Employee) {
+        // * Employee State: Get Customer Details
+        let res = await this.menu.promptCustomerDetails();
+        state = res.state;
+        this.customer = res.customer;
+        if (this.customer) {
+          state = await this.menu.goBackToEmployee(state);
+        }
+      } else {
+        state = State.Initialize;
       }
       this.state = state;
     }

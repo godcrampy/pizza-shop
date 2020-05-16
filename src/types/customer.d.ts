@@ -3,5 +3,5 @@ type Customer = {
   name: string;
   street: string;
   apt: string;
-  flat: number;
+  flat_no: number;
 };

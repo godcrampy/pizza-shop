@@ -3,6 +3,7 @@ enum State {
   Initialize,
   Employee,
   Admin,
+  CustomerFound,
 }
 
 export default State;
