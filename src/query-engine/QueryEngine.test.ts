@@ -55,3 +55,42 @@ it("should run queries", async () => {
 
   expect(r1).toStrictEqual(r2);
 });
+
+it("should get food", async () => {
+  let food = await q.getFood();
+  expect(food).toEqual(expect.any(Array));
+  expect(food.length).toBeGreaterThan(0);
+});
+
+it("should get pizzas", async () => {
+  let pizzas = await q.getPizzas();
+  expect(pizzas).toEqual(expect.any(Array));
+  expect(pizzas.length).toBeGreaterThan(0);
+});
+
+it("should get drinks", async () => {
+  let drinks = await q.getDrinks();
+  expect(drinks).toEqual(expect.any(Array));
+  expect(drinks.length).toBeGreaterThan(0);
+});
+
+it("should create order", async () => {
+  let length = (await q.runQuery("select count(*) as count from orders"))[0].count;
+  let order: Order = await q.createOrder(1234567890);
+  let newLength = (await q.runQuery("select count(*) as count from orders"))[0].count;
+  expect(length + 1).toBe(newLength);
+  await q.runQuery(`delete from orders where id = ${order.id}`);
+  newLength = (await q.runQuery("select count(*) as count from orders"))[0].count;
+  expect(length).toBe(newLength);
+});
+
+it("should add food items to contains", async () => {
+  let order: Order = await q.createOrder(1234567890);
+  let length = (await q.runQuery("select count(*) as count from contains"))[0].count;
+  await q.addContains(order, { food_id: 1, quantity: 4 });
+  let newLength = (await q.runQuery("select count(*) as count from contains"))[0].count;
+  expect(length + 1).toBe(newLength);
+  await q.runQuery(`delete from contains where id=${order.id} and food_id=${1}`);
+  newLength = (await q.runQuery("select count(*) as count from contains"))[0].count;
+  expect(length).toBe(newLength);
+});

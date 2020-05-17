@@ -37,6 +37,8 @@ class StateMachine {
         if (this.customer) {
           state = await this.menu.goBackToEmployee(state);
         }
+      } else if (this.state === State.CustomerFound) {
+        state = await this.menu.takeOrder(this.customer?.phone!);
       } else {
         state = State.Initialize;
       }

@@ -95,7 +95,7 @@ class Menu {
           type: "number",
           name: "phone",
           message: "Customer Phone Number: ",
-          default: 1234567890,
+          default: 80,
         },
       ])
     ).phone;
@@ -150,6 +150,68 @@ class Menu {
       state: State.CustomerFound,
       customer,
     };
+  }
+
+  async takeOrder(phone: number): Promise<State> {
+    // * List out items
+    const food = await this.query.getFood();
+    const pizzas = await this.query.getPizzas();
+    const drinks = await this.query.getDrinks();
+    console.log(chalk.bold.green("Pizzas"));
+    console.table(pizzas);
+    console.log();
+    console.log(chalk.bold.green("Drinks"));
+    console.table(drinks);
+    // * Recursively ask for items and their quantity
+    let confirm = true;
+    let foodToQuantity = new Map<number, number>();
+    while (confirm) {
+      let res = await inquirer.prompt([
+        {
+          type: "number",
+          message: "Select Items: ",
+          name: "food_id",
+        },
+        {
+          type: "number",
+          message: "Select Quantity: ",
+          name: "quantity",
+          default: 1,
+        },
+      ]);
+
+      if (foodToQuantity.has(res.food_id)) {
+        let quantity: number = foodToQuantity.get(res.food_id)!;
+        foodToQuantity.set(res.food_id, quantity + res.quantity);
+      } else {
+        foodToQuantity.set(res.food_id, res.quantity);
+      }
+      confirm = (
+        await inquirer.prompt([
+          {
+            type: "confirm",
+            message: "Add Items?",
+            name: "confirm",
+          },
+        ])
+      ).confirm;
+    }
+    console.table(foodToQuantity);
+    // * Create order
+    let order = await this.query.createOrder(phone);
+    // * Add items to contains
+    foodToQuantity.forEach(async (quantity, food_id) => {
+      await this.query.addContains(order, { food_id, quantity });
+    });
+    // * Add up items show the bill
+    let bill = 0;
+    foodToQuantity.forEach((quantity, food_id) => {
+      let foodItem: Food = food.find((e) => e.food_id === food_id)!;
+      bill += foodItem.price * quantity;
+    });
+    console.log(chalk.bold.green(`Bill: ₹${bill}`));
+    // * On payment start new cycle
+    return State.Employee;
   }
 }
 

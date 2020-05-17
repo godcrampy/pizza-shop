@@ -15,7 +15,7 @@ create table employee (
   flat_no integer,
   role varchar(20),
   primary key (id),
-  foreign key (role) references role(role)
+  foreign key (role) references role(role) on delete cascade
 );
 
 create table pin (
@@ -28,7 +28,7 @@ create table phone (
   id integer,
   phone bigint,
   primary key(id, phone),
-  foreign key(id) references employee(id)
+  foreign key(id) references employee(id) on delete cascade
 );
 
 -- * Food Section
@@ -42,26 +42,26 @@ create table customer (
 );
 
 create table orders (
-  id integer auto_increment,
+  id bigint,
   phone bigint,
   primary key(id, phone),
-  foreign key(phone) references customer(phone)
+  foreign key(phone) references customer(phone) on delete cascade
 );
 
 create table food (
   food_id integer auto_increment,
   price integer,
-  name varchar(20),
+  name varchar(50),
   primary key(food_id)
 );
 
 create table contains (
-  id integer,
+  id bigint,
   food_id integer,
   quantity integer,
   primary key(id, food_id),
-  foreign key(id) references orders(id),
-  foreign key(food_id) references food(food_id)
+  foreign key(id) references orders(id) on delete cascade,
+  foreign key(food_id) references food(food_id) on delete cascade
 );
 
 create table pizza (
