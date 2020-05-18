@@ -9,6 +9,13 @@ interface Pizza {
   size: number;
 }
 
+interface Drink {
+  food_id: number;
+  quantity: number;
+}
+
+interface DrinkFood extends Drink, Food {}
+
 interface PizzaFood extends Pizza, Food {}
 
 interface FoodQuantity {

@@ -4,6 +4,9 @@ enum State {
   Employee,
   Admin,
   CustomerFound,
+  AdminFood,
+  AdminBilling,
+  AdminEmployee,
 }
 
 export default State;

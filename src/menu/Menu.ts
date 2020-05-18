@@ -213,6 +213,106 @@ class Menu {
     // * On payment start new cycle
     return State.Employee;
   }
+
+  async promptAdminCategories(): Promise<State> {
+    let res = await inquirer.prompt([
+      {
+        type: "list",
+        name: "category",
+        message: "Choose a category",
+        choices: ["Employee", "Food", "Billing"],
+      },
+    ]);
+    switch (res.category) {
+      case "Employee":
+        return State.AdminEmployee;
+      case "Food":
+        return State.AdminFood;
+      case "Billing":
+        return State.AdminBilling;
+      default:
+        return State.Admin;
+    }
+  }
+
+  async promptAdminFood(): Promise<State> {
+    let res = await inquirer.prompt([
+      {
+        type: "list",
+        name: "category",
+        message: "Select an action to perform",
+        choices: ["List all Food Items", "Add Food Item", "Delete Food Item"],
+      },
+    ]);
+    if (res.category === "List all Food Items") {
+      let food = await this.query.getFood();
+      console.table(food);
+      return State.Admin;
+    }
+    if (res.category === "Add Food Item") {
+      let res = await inquirer.prompt([
+        {
+          name: "type",
+          type: "list",
+          message: "Pizza or Drink",
+          choices: ["Pizza", "Drink"],
+        },
+        {
+          name: "name",
+          type: "input",
+          message: "Name",
+        },
+        {
+          name: "price",
+          type: "number",
+          message: "Price",
+        },
+        {
+          name: "size",
+          type: "number",
+          message: "Size/Quantity",
+        },
+      ]);
+      if (res.type === "Pizza") {
+        let p: PizzaFood = {
+          food_id: 0,
+          name: res.name,
+          price: res.price,
+          size: res.size,
+        };
+        await this.query.createNewPizza(p);
+      } else {
+        let d: DrinkFood = {
+          food_id: 0,
+          name: res.name,
+          price: res.price,
+          quantity: res.size,
+        };
+        await this.query.createNewDrink(d);
+      }
+      console.log(chalk.bold.green("Added New Food Item!"));
+      return State.Admin;
+    }
+
+    if (res.category === "Delete Food Item") {
+      let food = await this.query.getFood();
+      console.table(food);
+      let id = (
+        await inquirer.prompt([
+          {
+            type: "number",
+            name: "id",
+            message: "Enter Food Id",
+          },
+        ])
+      ).id;
+      await this.query.deleteFood(id);
+      console.log(chalk.bold.green("Deleted Food Item!"));
+      return State.Admin;
+    }
+
+    return State.Admin;
+  }
 }
 
 export default Menu;

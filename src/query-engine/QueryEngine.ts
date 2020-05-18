@@ -57,7 +57,7 @@ class QueryEngine {
     return ((await this.connection.execute(`select * from food natural join pizza;`)) as any)[0];
   }
 
-  async getDrinks(): Promise<PizzaFood[]> {
+  async getDrinks(): Promise<DrinkFood[]> {
     return ((await this.connection.execute(`select * from food natural join drink;`)) as any)[0];
   }
 
@@ -76,6 +76,40 @@ class QueryEngine {
     await this.connection.execute(
       `insert into contains values(${order.id}, ${food_id}, ${quantity});`
     );
+  }
+
+  async createNewDrink(drink: DrinkFood): Promise<DrinkFood> {
+    let food = await this.getFood();
+    // * get max id
+    let ids = food.map((f) => f.food_id);
+    let maxId = Math.max.apply(null, ids);
+    let newId = maxId + 1;
+    drink.food_id = newId;
+
+    await this.connection.execute(
+      `insert into food values(${drink.food_id}, ${drink.price}, "${drink.name}");`
+    );
+    await this.connection.execute(`insert into drink values(${drink.food_id}, ${drink.quantity});`);
+    return drink;
+  }
+
+  async createNewPizza(pizza: PizzaFood): Promise<PizzaFood> {
+    let food = await this.getFood();
+    // * get max id
+    let ids = food.map((f) => f.food_id);
+    let maxId = Math.max.apply(null, ids);
+    let newId = maxId + 1;
+    pizza.food_id = newId;
+
+    await this.connection.execute(
+      `insert into food values(${pizza.food_id}, ${pizza.price}, "${pizza.name}");`
+    );
+    await this.connection.execute(`insert into pizza values(${pizza.food_id}, ${pizza.size});`);
+    return pizza;
+  }
+
+  async deleteFood(food_id: number) {
+    await this.connection.execute(`delete from food where food_id=${food_id}`);
   }
 }
 

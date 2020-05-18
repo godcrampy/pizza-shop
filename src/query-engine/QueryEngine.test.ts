@@ -1,3 +1,5 @@
+/// <reference path="../types/customer.d.ts" />
+/// <reference path="../types/food.d.ts" />
 import QueryEngine from "./QueryEngine";
 
 let q = new QueryEngine();
@@ -93,4 +95,74 @@ it("should add food items to contains", async () => {
   await q.runQuery(`delete from contains where id=${order.id} and food_id=${1}`);
   newLength = (await q.runQuery("select count(*) as count from contains"))[0].count;
   expect(length).toBe(newLength);
+});
+
+it("should create and delete new drink", async () => {
+  let drinks = await q.getDrinks();
+  let food = await q.getFood();
+  let drink: DrinkFood = {
+    food_id: 0,
+    name: "New Drink",
+    price: 50,
+    quantity: 150,
+  };
+  drink = await q.createNewDrink(drink);
+  const { food_id, name, price, quantity } = drink;
+  let newDrinks = await q.getDrinks();
+  let newFood = await q.getFood();
+
+  expect(newDrinks.length).toBe(drinks.length + 1);
+  expect(newFood.length).toBe(food.length + 1);
+  expect(newFood.some((food) => food.food_id === food_id)).toBe(true);
+  expect(newFood.some((food) => food.name === name)).toBe(true);
+  expect(newFood.some((food) => food.price === price)).toBe(true);
+  expect(newDrinks.some((drink) => drink.food_id === food_id)).toBe(true);
+  expect(newDrinks.some((drink) => drink.name === name)).toBe(true);
+  expect(newDrinks.some((drink) => drink.price === price)).toBe(true);
+  expect(newDrinks.some((drink) => drink.quantity === quantity)).toBe(true);
+
+  await q.deleteFood(food_id);
+
+  newDrinks = await q.getDrinks();
+  newFood = await q.getFood();
+
+  expect(newDrinks.length).toBe(drinks.length);
+  expect(newFood.length).toBe(food.length);
+  expect(newFood.some((food) => food.food_id === food_id)).toBe(false);
+  expect(newDrinks.some((drink) => drink.food_id === food_id)).toBe(false);
+});
+
+it("should create and delete new pizza", async () => {
+  let pizzas = await q.getPizzas();
+  let food = await q.getFood();
+  let pizza: PizzaFood = {
+    food_id: 0,
+    name: "New Pizza",
+    price: 50,
+    size: 5,
+  };
+  pizza = await q.createNewPizza(pizza);
+  const { food_id, name, price, size } = pizza;
+  let newPizzas = await q.getPizzas();
+  let newFood = await q.getFood();
+
+  expect(newPizzas.length).toBe(pizzas.length + 1);
+  expect(newFood.length).toBe(food.length + 1);
+  expect(newFood.some((food) => food.food_id === food_id)).toBe(true);
+  expect(newFood.some((food) => food.name === name)).toBe(true);
+  expect(newFood.some((food) => food.price === price)).toBe(true);
+  expect(newPizzas.some((pizza) => pizza.food_id === food_id)).toBe(true);
+  expect(newPizzas.some((pizza) => pizza.name === name)).toBe(true);
+  expect(newPizzas.some((pizza) => pizza.price === price)).toBe(true);
+  expect(newPizzas.some((pizza) => pizza.size === size)).toBe(true);
+
+  await q.deleteFood(food_id);
+
+  newPizzas = await q.getPizzas();
+  newFood = await q.getFood();
+
+  expect(newPizzas.length).toBe(pizzas.length);
+  expect(newFood.length).toBe(food.length);
+  expect(newFood.some((food) => food.food_id === food_id)).toBe(false);
+  expect(newPizzas.some((pizza) => pizza.food_id === food_id)).toBe(false);
 });

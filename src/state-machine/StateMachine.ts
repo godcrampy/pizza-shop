@@ -39,6 +39,10 @@ class StateMachine {
         }
       } else if (this.state === State.CustomerFound) {
         state = await this.menu.takeOrder(this.customer?.phone!);
+      } else if (this.state === State.Admin) {
+        state = await this.menu.promptAdminCategories();
+      } else if (this.state === State.AdminFood) {
+        state = await this.menu.promptAdminFood();
       } else {
         state = State.Initialize;
       }
