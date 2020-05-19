@@ -1,8 +1,19 @@
+insert into role values("admin", 20000);
 insert into role values("manager", 30000);
 insert into role values("waiter", 10000);
 insert into role values("cleaner", 10000);
 insert into role values("delivery", 12000);
 insert into role values("cashier", 15000);
+
+insert into employee values(1, "Leonard", "leonard@pizza.com", "theo street", "Hofstader Apartment", 4, "manager");
+insert into employee values(2, "Penny", "penny@pizza.com", "comic street", "Sunset Apartment", 5, "waiter");
+insert into employee values(3, "Sheldon", "sheldor@pizza.com", "theo street", "Hofstader Apartment", 3, "cleaner");
+insert into employee values(4, "Raj", "raj@pizza.com", "MG road", "campfire", 1, "waiter");
+insert into employee values(5, "Howard", "nasa@pizza.com", "MG road", "campfire 2", 2, "delivery");
+
+insert into pin values("theo street", 41345)
+insert into pin values("comic street", 41346)
+insert into pin values("MG Road", 41345)
 
 insert into customer values(1234567890, "John Doe", "5th Street", "Skylights", 42);
 insert into customer values(80, "Richard Hendricks", "5th Street", "Pied Piper", 5);

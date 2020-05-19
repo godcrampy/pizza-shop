@@ -1,5 +1,6 @@
 /// <reference path="../types/customer.d.ts" />
 /// <reference path="../types/food.d.ts" />
+/// <reference path="../types/employee.d.ts" />
 import QueryEngine from "./QueryEngine";
 
 let q = new QueryEngine();
@@ -17,7 +18,6 @@ it("should return if customer exists", async () => {
 
 it("should return roles", async () => {
   let r1 = await q.getRoles();
-
   expect(r1).toEqual(expect.any(Array));
   expect(r1.length).toBeGreaterThan(0);
 });
@@ -165,4 +165,95 @@ it("should create and delete new pizza", async () => {
   expect(newFood.length).toBe(food.length);
   expect(newFood.some((food) => food.food_id === food_id)).toBe(false);
   expect(newPizzas.some((pizza) => pizza.food_id === food_id)).toBe(false);
+});
+
+it("shoud update role", async () => {
+  let roles = await q.getRoles();
+  let adminRole: Role = roles.find((role) => role.role === "admin")!;
+  await q.updateRole({ role: "admin", salary: 1 });
+
+  let newRoles = await q.getRoles();
+  let newAdminRole: Role = newRoles.find((role) => role.role === "admin")!;
+  expect(newAdminRole.salary).toBe(1);
+
+  await q.updateRole(adminRole);
+
+  newRoles = await q.getRoles();
+  newAdminRole = newRoles.find((role) => role.role === "admin")!;
+  expect(newAdminRole.salary).toBe(adminRole.salary);
+});
+
+it("shoud add role", async () => {
+  const role: Role = {
+    role: "ceo",
+    salary: 100,
+  };
+
+  let roles = await q.getRoles();
+  await q.addRole(role);
+  let newRoles = await q.getRoles();
+
+  expect(newRoles.length).toBe(roles.length + 1);
+  expect(newRoles.some((r) => r.role === role.role)).toBe(true);
+
+  await q._deleteRole(role);
+  newRoles = await q.getRoles();
+  expect(newRoles.length).toBe(roles.length);
+  expect(newRoles.some((r) => r.role === role.role)).toBe(false);
+});
+
+it("should get employees", async () => {
+  let emp: EmployeeRole[] = await q.getEmployees();
+  expect(emp).toEqual(expect.any(Array));
+  expect(emp.length).toBeGreaterThan(0);
+});
+
+it("should create and delete an employee", async () => {
+  let employees = await q.getEmployees();
+  let employee: Employee = {
+    id: 0,
+    name: "Dinesh",
+    email: "dinesh@pizza.com",
+    apt: "Sky",
+    street: "MG road",
+    pin: 41345,
+    flat_no: 78,
+    role: "waiter",
+  };
+  employee = await q.addEmployee(employee);
+  const { apt, email, flat_no, id, name, pin, role, street } = employee;
+  let newEmployees = await q.getEmployees();
+  expect(newEmployees.length).toBe(employees.length + 1);
+  expect(newEmployees.some((e) => e.apt === apt)).toBe(true);
+  expect(newEmployees.some((e) => e.name === name)).toBe(true);
+  expect(newEmployees.some((e) => e.email === email)).toBe(true);
+  expect(newEmployees.some((e) => e.flat_no === flat_no)).toBe(true);
+  expect(newEmployees.some((e) => e.id === id)).toBe(true);
+  expect(newEmployees.some((e) => e.pin === pin)).toBe(true);
+  expect(newEmployees.some((e) => e.role === role)).toBe(true);
+  expect(newEmployees.some((e) => e.street === street)).toBe(true);
+
+  await q.removeEmployee(id);
+
+  newEmployees = await q.getEmployees();
+
+  expect(newEmployees.length).toBe(employees.length);
+  expect(newEmployees.some((e) => e.id === id)).toBe(false);
+});
+
+it("shoud update employee", async () => {
+  let emps = await q.getEmployees();
+  let employee = emps[0];
+
+  let name = employee.name;
+
+  employee.name = "Lemons";
+  await q.updateEmployee(employee);
+  let newEmps = await q.getEmployees();
+  expect(newEmps.some((e) => e.name === "Lemons")).toBe(true);
+
+  employee.name = name;
+  await q.updateEmployee(employee);
+  newEmps = await q.getEmployees();
+  expect(newEmps.some((e) => e.name === name)).toBe(true);
 });

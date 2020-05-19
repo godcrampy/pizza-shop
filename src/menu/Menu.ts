@@ -313,6 +313,196 @@ class Menu {
 
     return State.Admin;
   }
+
+  async promptAdminEmployee(): Promise<State> {
+    let res = await inquirer.prompt([
+      {
+        type: "list",
+        name: "category",
+        message: "Select an action to perform",
+        choices: [
+          "Show Salaries",
+          "Change Salary",
+          "Add Role",
+          "Show Employees",
+          "Add Employee",
+          "Edit Employee",
+          "Remove Employee",
+        ],
+      },
+    ]);
+    if (res.category === "Show Salaries") {
+      let r = await this.query.getRoles();
+      console.table(r);
+      return State.Admin;
+    }
+
+    if (res.category === "Change Salary") {
+      let roles = await this.query.getRoles();
+      console.table(roles);
+      let res = await inquirer.prompt([
+        {
+          type: "list",
+          name: "role",
+          message: "Select a Role",
+          choices: roles.map((role) => role.role),
+        },
+        {
+          type: "number",
+          name: "salary",
+          message: "Select a Salary",
+        },
+      ]);
+      await this.query.updateRole(res);
+      console.log(chalk.bold.green("Updated!"));
+      return State.Admin;
+    }
+
+    if (res.category === "Add Role") {
+      let res = await inquirer.prompt([
+        {
+          type: "input",
+          name: "role",
+          message: "Select a Role",
+        },
+        {
+          type: "number",
+          name: "salary",
+          message: "Select a Salary",
+        },
+      ]);
+      await this.query.addRole(res);
+      console.log(chalk.bold.green("Added!"));
+      return State.Admin;
+    }
+
+    if (res.category === "Show Employees") {
+      let e = await this.query.getEmployees();
+      console.table(e);
+      return State.Admin;
+    }
+
+    if (res.category === "Add Employee") {
+      let roles = await this.query.getRoles();
+      let res = await inquirer.prompt([
+        {
+          type: "input",
+          message: "Enter Name: ",
+          name: "name",
+        },
+        {
+          type: "input",
+          message: "Enter Email: ",
+          name: "email",
+        },
+        {
+          type: "input",
+          message: "Enter Street: ",
+          name: "street",
+        },
+        {
+          type: "input",
+          message: "Enter Apartment: ",
+          name: "apt",
+        },
+        {
+          type: "number",
+          message: "Enter Flat Number: ",
+          name: "flat_no",
+        },
+        {
+          type: "number",
+          message: "Enter Pin Code: ",
+          name: "pin",
+        },
+        {
+          type: "list",
+          message: "Select Role: ",
+          name: "role",
+          choices: roles.map((r) => r.role),
+        },
+      ]);
+      await this.query.addEmployee({ ...res, id: 0 });
+      console.log(chalk.bold.green("New Employee Created!"));
+      return State.Admin;
+    }
+
+    if (res.category === "Remove Employee") {
+      let emps = await this.query.getEmployees();
+      console.table(emps);
+      const id = (
+        await inquirer.prompt([
+          {
+            type: "number",
+            message: "Select Employee Id: ",
+            name: "id",
+          },
+        ])
+      ).id;
+      await this.query.removeEmployee(id);
+      console.log(chalk.bold.red("Employee Deleted"));
+      return State.Admin;
+    }
+
+    if (res.category === "Edit Employee") {
+      let emps = await this.query.getEmployees();
+      console.table(emps);
+      const id = (
+        await inquirer.prompt([
+          {
+            type: "number",
+            message: "Select Employee Id: ",
+            name: "id",
+          },
+        ])
+      ).id;
+      let employee = emps.find((e) => (e.id = id))!;
+      let roles = await this.query.getRoles();
+      let res = await inquirer.prompt([
+        {
+          type: "input",
+          message: "Enter Name: ",
+          name: "name",
+          default: employee.name,
+        },
+        {
+          type: "input",
+          message: "Enter Email: ",
+          name: "email",
+          default: employee.email,
+        },
+        {
+          type: "input",
+          message: "Enter Street: ",
+          name: "street",
+          default: employee.street,
+        },
+        {
+          type: "input",
+          message: "Enter Apartment: ",
+          name: "apt",
+          default: employee.apt,
+        },
+        {
+          type: "number",
+          message: "Enter Flat Number: ",
+          name: "flat_no",
+          default: employee.flat_no,
+        },
+        {
+          type: "list",
+          message: "Select Role: ",
+          name: "role",
+          choices: roles.map((r) => r.role),
+          default: employee.role,
+        },
+      ]);
+
+      await this.query.updateEmployee({ ...res, id: employee.id, pin: employee.pin });
+      console.log(chalk.bold.green("Updated Employee"));
+    }
+    return State.Admin;
+  }
 }
 
 export default Menu;

@@ -7,7 +7,7 @@ create table role (
 );
 
 create table employee (
-  id integer auto_increment,
+  id integer,
   name varchar(20) not null,
   email varchar(20),
   street varchar(20),
