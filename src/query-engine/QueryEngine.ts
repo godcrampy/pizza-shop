@@ -165,6 +165,30 @@ class QueryEngine {
     );
     `insert into employee values(1, "Leonard", "leonard@pizza.com", "theo street", "Hofstader Apartment", 4, "manager");`;
   }
+
+  async getCustomers(): Promise<Customer[]> {
+    return ((await this.connection.execute(`select * from customer;`)) as any)[0];
+  }
+
+  async getCustomerSpending(): Promise<any[]> {
+    return ((await this.connection.execute(
+      `select sum(price*quantity) as spent, customer.name, customer.phone from contains natural join food natural join orders, customer where customer.phone = orders.phone group by customer.phone;`
+    )) as any)[0];
+  }
+
+  async getPopularItems(): Promise<any[]> {
+    return ((await this.connection.execute(
+      `select name, food_id, sum(quantity) as sold from contains natural join food group by food_id order by sum(quantity) desc;`
+    )) as any)[0];
+  }
+
+  async getTodaysSale(): Promise<any[]> {
+    let date = new Date();
+    date.setHours(0, 0, 0, 0);
+    return ((await this.connection.execute(
+      `select quantity, price, name from orders natural join contains natural join food where id > ${+date} order by id;`
+    )) as any)[0];
+  }
 }
 
 export default QueryEngine;

@@ -503,6 +503,50 @@ class Menu {
     }
     return State.Admin;
   }
+
+  async promptAdminBilling(): Promise<State> {
+    let res = await inquirer.prompt([
+      {
+        type: "list",
+        name: "category",
+        message: "Select an action to perform",
+        choices: [
+          "Show Customers",
+          "Show Customer Spending",
+          "Show Todays Earning",
+          "Show Popular Items",
+        ],
+      },
+    ]);
+
+    if (res.category === "Show Customers") {
+      let customers = await this.query.getCustomers();
+      console.table(customers);
+      return State.Admin;
+    }
+
+    if (res.category === "Show Customer Spending") {
+      let customers = await this.query.getCustomerSpending();
+      console.table(customers);
+      return State.Admin;
+    }
+
+    if (res.category === "Show Todays Earning") {
+      let items = await this.query.getTodaysSale();
+      console.table(items);
+      let earning = 0;
+      items.forEach((i) => (earning += i.quantity * i.price));
+      console.log(chalk.bold("Today's Earning: " + chalk.green(earning)));
+      return State.Admin;
+    }
+
+    if (res.category === "Show Popular Items") {
+      let items = await this.query.getPopularItems();
+      console.table(items);
+      return State.Admin;
+    }
+    return State.Admin;
+  }
 }
 
 export default Menu;

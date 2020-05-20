@@ -45,12 +45,8 @@ class StateMachine {
         state = await this.menu.promptAdminFood();
       } else if (this.state === State.AdminEmployee) {
         state = await this.menu.promptAdminEmployee();
-        // * Edit role salary
-        // * Add role
-        // * Delete role
-        // * Add employee
-        // * Change employee role
-        // * Delete employee
+      } else if (this.state === State.AdminBilling) {
+        state = await this.menu.promptAdminBilling();
       } else {
         state = State.Initialize;
       }
