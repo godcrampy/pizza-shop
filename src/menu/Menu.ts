@@ -328,6 +328,9 @@ class Menu {
           "Add Employee",
           "Edit Employee",
           "Remove Employee",
+          "Add Employee Phone Number",
+          "Remove Employee Phone Number",
+          "Show Employee Phone Numbers",
         ],
       },
     ]);
@@ -500,6 +503,57 @@ class Menu {
 
       await this.query.updateEmployee({ ...res, id: employee.id, pin: employee.pin });
       console.log(chalk.bold.green("Updated Employee"));
+    }
+
+    if (res.category === "Add Employee Phone Number") {
+      let emps = await this.query.getEmployees();
+      console.table(emps);
+      let res = await inquirer.prompt([
+        {
+          type: "list",
+          message: "Select Employee Id",
+          choices: emps.map((e) => e.id),
+          name: "id",
+        },
+        {
+          type: "number",
+          message: "Enter Phone Number: ",
+          name: "phone",
+        },
+      ]);
+
+      await this.query.addEmployeePhone(res.id, res.phone);
+      console.log(chalk.bold.green("Phone Number Added"));
+      return State.Admin;
+    }
+
+    if (res.category === "Remove Employee Phone Number") {
+      let emps = await this.query.getEmployees();
+      let phones = await this.query.showEmployeePhone();
+      console.table(phones);
+      let res = await inquirer.prompt([
+        {
+          type: "list",
+          message: "Select Employee Id",
+          choices: emps.map((e) => e.id),
+          name: "id",
+        },
+        {
+          type: "number",
+          message: "Enter Phone Number: ",
+          name: "phone",
+        },
+      ]);
+
+      await this.query.removeEmployeePhone(res.id, res.phone);
+      console.log(chalk.bold.red("Phone Number Deleted"));
+      return State.Admin;
+    }
+
+    if (res.category === "Show Employee Phone Numbers") {
+      let res = await this.query.showEmployeePhone();
+      console.table(res);
+      return State.Admin;
     }
     return State.Admin;
   }

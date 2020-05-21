@@ -189,6 +189,20 @@ class QueryEngine {
       `select quantity, price, name from orders natural join contains natural join food where id > ${+date} order by id;`
     )) as any)[0];
   }
+
+  async addEmployeePhone(id: number, phone: number) {
+    await this.connection.execute(`insert into phone values (${id}, ${phone})`);
+  }
+
+  async removeEmployeePhone(id: number, phone: number) {
+    await this.connection.execute(`delete from phone where id=${id} and phone=${phone}`);
+  }
+
+  async showEmployeePhone(): Promise<any[]> {
+    return ((await this.connection.execute(
+      `select id, name, phone from phone natural join employee;`
+    )) as any)[0];
+  }
 }
 
 export default QueryEngine;

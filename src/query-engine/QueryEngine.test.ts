@@ -257,3 +257,39 @@ it("shoud update employee", async () => {
   newEmps = await q.getEmployees();
   expect(newEmps.some((e) => e.name === name)).toBe(true);
 });
+
+it("should add and delete employee phone", async () => {
+  let phones = await q.showEmployeePhone();
+  await q.addEmployeePhone(5, 99);
+  let newPhones = await q.showEmployeePhone();
+
+  expect(newPhones.length).toBe(phones.length + 1);
+
+  await q.removeEmployeePhone(5, 99);
+  newPhones = await q.showEmployeePhone();
+
+  expect(newPhones.length).toBe(phones.length);
+});
+
+it("should return customers", async () => {
+  let r1 = await q.getCustomers();
+  expect(r1).toEqual(expect.any(Array));
+  expect(r1.length).toBeGreaterThan(0);
+});
+
+it("should return customer spending", async () => {
+  let r1 = await q.getCustomerSpending();
+  expect(r1).toEqual(expect.any(Array));
+  expect(r1.length).toBeGreaterThan(0);
+});
+
+it("should return popular items", async () => {
+  let r1 = await q.getPopularItems();
+  expect(r1).toEqual(expect.any(Array));
+  expect(r1.length).toBeGreaterThan(0);
+});
+
+it("should return todays sale", async () => {
+  let r1 = await q.getTodaysSale();
+  expect(r1).toEqual(expect.any(Array));
+});
