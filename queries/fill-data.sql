@@ -11,12 +11,20 @@ insert into employee values(3, "Sheldon", "sheldor@pizza.com", "theo street", "H
 insert into employee values(4, "Raj", "raj@pizza.com", "MG road", "campfire", 1, "waiter");
 insert into employee values(5, "Howard", "nasa@pizza.com", "MG road", "campfire 2", 2, "delivery");
 
-insert into pin values("theo street", 41345)
-insert into pin values("comic street", 41346)
-insert into pin values("MG Road", 41345)
+insert into pin values("theo street", 41345);
+insert into pin values("comic street", 41346);
+insert into pin values("MG Road", 41345);
+
+insert into phone values(1, 456789123);
+insert into phone values(1, 456132789);
+insert into phone values(4, 9876543210);
+
 
 insert into customer values(1234567890, "John Doe", "5th Street", "Skylights", 42);
 insert into customer values(80, "Richard Hendricks", "5th Street", "Pied Piper", 5);
+
+insert into orders values(1590037648639, 1234567890);
+insert into orders values(1590037648345, 80);
 
 insert into food values(1, 80, "Margherita Pizza: 5 inch");
 insert into food values(2, 100, "Margherita Pizza: 7 inch");
@@ -30,6 +38,11 @@ insert into food values(8, 150, "Napoli Pizza: 9 inch");
 insert into food values(9, 50, "Coke small");
 insert into food values(10, 100, "Coke medium");
 insert into food values(11, 120, "Coke large");
+
+insert into contains values(1590037648639, 1, 5);
+insert into contains values(1590037648639, 9, 3);
+insert into contains values(1590037648345, 2, 1);
+insert into contains values(1590037648345, 10, 2);
 
 insert into pizza values(1, 5);
 insert into pizza values(2, 7);
