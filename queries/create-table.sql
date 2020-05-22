@@ -14,6 +14,8 @@ create table employee (
   apt varchar(20),
   flat_no integer,
   role varchar(20),
+  birth_year integer,
+  age int generated always as (2020 - birth_year) stored,
   primary key (id),
   foreign key (role) references role(role) on delete cascade
 );

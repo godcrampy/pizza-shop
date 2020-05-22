@@ -219,6 +219,8 @@ it("should create and delete an employee", async () => {
     pin: 41345,
     flat_no: 78,
     role: "waiter",
+    birth_year: 1980,
+    age: 5,
   };
   employee = await q.addEmployee(employee);
   const { apt, email, flat_no, id, name, pin, role, street } = employee;

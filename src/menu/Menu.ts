@@ -424,8 +424,13 @@ class Menu {
           name: "role",
           choices: roles.map((r) => r.role),
         },
+        {
+          type: "number",
+          message: "Enter Birth Year: ",
+          name: "birth_year",
+        },
       ]);
-      await this.query.addEmployee({ ...res, id: 0 });
+      await this.query.addEmployee({ ...res, id: 0, age: 0 });
       console.log(chalk.bold.green("New Employee Created!"));
       return State.Admin;
     }
@@ -499,9 +504,15 @@ class Menu {
           choices: roles.map((r) => r.role),
           default: employee.role,
         },
+        {
+          type: "number",
+          message: "Enter Birth Year: ",
+          name: "birth_year",
+          default: employee.birth_year,
+        },
       ]);
 
-      await this.query.updateEmployee({ ...res, id: employee.id, pin: employee.pin });
+      await this.query.updateEmployee({ ...res, id: employee.id, pin: employee.pin, age: 0 });
       console.log(chalk.bold.green("Updated Employee"));
     }
 

@@ -7,6 +7,8 @@ interface Employee {
   apt: string;
   flat_no: number;
   role: string;
+  birth_year: number;
+  age: number;
 }
 
 interface Role {

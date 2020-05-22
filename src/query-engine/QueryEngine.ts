@@ -140,9 +140,9 @@ class QueryEngine {
     let maxId = Math.max.apply(null, ids);
     let newId = maxId + 1;
     employee.id = newId;
-    const { apt, email, flat_no, id, name, pin, role, street } = employee;
+    const { apt, email, flat_no, id, name, pin, role, street, birth_year } = employee;
     await this.connection.execute(
-      `insert into employee values(${id}, "${name}", "${email}", "${street}", "${apt}", ${flat_no}, "${role}");`
+      `insert into employee values(${id}, "${name}", "${email}", "${street}", "${apt}", ${flat_no}, "${role}", ${birth_year}, default);`
     );
     try {
       await this.connection.execute(`insert into pin values("${street}", ${pin});`);
@@ -157,13 +157,12 @@ class QueryEngine {
   }
 
   async updateEmployee(employee: Employee) {
-    const { apt, email, flat_no, id, name, role, street } = employee;
+    const { apt, email, flat_no, id, name, role, street, birth_year } = employee;
     await this.connection.execute(
       `update employee
-      set name="${name}", email="${email}", street="${street}", apt="${apt}", flat_no=${flat_no}, role="${role}" 
+      set name="${name}", email="${email}", street="${street}", apt="${apt}", flat_no=${flat_no}, role="${role}", birth_year=${birth_year} 
       where id=${id}; `
     );
-    `insert into employee values(1, "Leonard", "leonard@pizza.com", "theo street", "Hofstader Apartment", 4, "manager");`;
   }
 
   async getCustomers(): Promise<Customer[]> {
